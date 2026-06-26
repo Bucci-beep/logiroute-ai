@@ -5,28 +5,6 @@ LogiRoute-AI is a production-grade, asynchronous backend framework built with **
 Rather than relying on fragile, raw LLM prompt responses, this system implements a deterministic validation pattern paired with a multi-agent orchestration workflow using high-speed **Groq LLM inference** and native tool-calling capabilities.
 
 ---
-
-## 🏗️ 3-Step Execution Architecture
-
-The system treats LLM integration as an engineering pipeline rather than an experimental script, operating across three distinct layers:
-
-[ Unstructured Text ]
-          │
-          ▼
-┌──────────────────────┐
-│ 1. INTAKE LAYER      │ ──► [ Pydantic Schema Validation ]
-└──────────────────────┘                 │
-│                             ├─► [FAIL] ──► [ /manual_review Queue ]
-▼ [PASS]                      │
-┌──────────────────────┐                 ▼
-│ 2. DISPATCH AGENT    │ ──► [ Loop 1: Query Fleet DB Tool ]
-└──────────────────────┘ ──► [ Loop 2: Call Calendar/Scheduling API ]
-│
-▼
-┌──────────────────────┐
-│ 3. FASTAPI GATEWAY   │ ──► [ Asynchronous Production Endpoints ]
-└──────────────────────┘
-
 ### 1. Strict Schema Validation (The Intake Layer)
 Guards the database and core application domain using a strict `Pydantic` schema to parse raw payloads. It enforces rigid, real-world physical and temporal logistics boundaries before data routes downstream:
 * **Temporal Guards:** Ensures pickup dates cannot be backdated or scheduled in the past.
